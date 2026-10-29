@@ -1,0 +1,61 @@
+name: imagination-director
+version: 0.1.0
+description: "Hermes drives a local Imagination Studio (Wasserman Slate AI Studio) on a DGX Spark: tools for stills, clips, long videos, voice, music, sound, QA and export over the studio's REST API, an LFM3-Omni review tool, and an autonomous director pipeline (brief -> shots -> stills -> review -> animate -> voice/music/foley -> export). Local only."
+author: AgentSparko
+kind: standalone
+license: MIT
+homepage: https://github.com/AgentSparko/hermes-imagination-director
+manifest_version: 2
+platforms:
+  - linux
+  - macos
+provides_tools:
+  - studio_state
+  - studio_jobs
+  - studio_submit
+  - studio_wait
+  - studio_estimate
+  - studio_prompt_check
+  - studio_compose
+  - studio_library
+  - studio_voice_take
+  - studio_music_take
+  - studio_qa
+  - studio_review
+  - director_run
+  - director_status
+provides_hooks:
+  - on_session_end
+config_schema:
+  studio_url:
+    type: string
+    default: "http://127.0.0.1:7870"
+    description: "Imagination Studio app address."
+  studio_key:
+    type: string
+    default: ""
+    description: "Studio access key (X-Studio-Key); empty = read <studio folder>/access-key or rely on loopback."
+  studio_home:
+    type: string
+    default: "~/ImaginationStudio"
+    description: "The studio folder (renders, scouts, exports, access-key)."
+  omni_url:
+    type: string
+    default: "http://127.0.0.1:8182"
+    description: "llama-server with LFM3-Omni-2B for reviewing stills and clips."
+  brain_url:
+    type: string
+    default: "http://127.0.0.1:8183"
+    description: "llama-server with LFM3-1.7B used by the director for planning (JSON shot lists)."
+  director_home:
+    type: string
+    default: "~/.hermes-imagination-director/films"
+    description: "Where director runs keep their plan, logs and results."
+  max_clip_seconds:
+    type: integer
+    default: 10
+    description: "Longest single clip the director asks for (the studio chains longer ones)."
+  max_parallel_jobs:
+    type: integer
+    default: 1
+    description: "Jobs the director keeps queued at once (the Spark renders one at a time anyway)."
